@@ -5,6 +5,7 @@ import { GeistSans } from 'geist/font/sans';
 
 import { METADATA, ROUTES } from '@/app/(constants)';
 
+import { Provider } from './provider';
 import '@/assets/styles/tailwind.css';
 
 export const metadata: Metadata = {
@@ -47,7 +48,20 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
       lang="ru"
       suppressHydrationWarning
     >
-      <body className="min-h-screen font-sans antialiased">{children}</body>
+      <head>
+        <script
+          // eslint-disable-next-line react-dom/no-dangerously-set-innerhtml
+          dangerouslySetInnerHTML={{
+            __html: `
+              const mode = document.cookie.match(/mode=(.*?)(;|$)/)?.[1] || 'dark';
+              document.documentElement.classList.add(mode);
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-screen font-sans antialiased">
+        <Provider>{children}</Provider>
+      </body>
     </html>
   );
 }
