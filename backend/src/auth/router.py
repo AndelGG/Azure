@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
-from db import database
+from src.db import database
 from sqlalchemy.ext.asyncio import AsyncSession
-from auth.schemas import Create_acc, LoginRequest, Login_token
-from auth.utils import get_watched_films_func, create_user_accaunt_func
-from auth.jwt_token import login_for_access_token
+from src.auth.schemas import Create_acc, LoginRequest, Login_token
+from src.auth.utils import get_watched_films_func, create_user_accaunt_func
+from src.auth.jwt_token import login_for_access_token
 
 
 auth_router=APIRouter(tags=["Auth_block"])

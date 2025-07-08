@@ -4,8 +4,8 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt
 from sqlalchemy.ext.asyncio import AsyncSession
-from db import database
-from auth.models import User
+from src.db import database
+from src.auth.models import User
 from sqlalchemy.future import select
 from sqlalchemy import update, or_
 from passlib.context import CryptContext

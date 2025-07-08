@@ -1,8 +1,8 @@
-from auth.models import User
+from src.auth.models import User
 from fastapi import HTTPException
 from sqlalchemy.future import select
 from sqlalchemy import or_, update, delete
-from auth.jwt_token import get_password_hash, access_token_for_func
+from src.auth.jwt_token import get_password_hash, access_token_for_func
 
 
 async def get_watched_films_func(ident, db):
