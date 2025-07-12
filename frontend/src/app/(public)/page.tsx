@@ -1,30 +1,14 @@
-'use client';
+import { Suspense } from 'react';
+import { SwiperListSkeleton, SwiperMediaList } from '@/components/swiper';
 
-import { useKeenSlider } from 'keen-slider/react';
-import { FilmCard } from '@/components/film/film-card';
-import 'keen-slider/keen-slider.min.css';
+export const revalidate = 600;
 
 export default function RootPage() {
-  const [ref] = useKeenSlider<HTMLDivElement>({
-    slides: {
-      perView: 3,
-      spacing: 0,
-    },
-  });
   return (
-    <div ref={ref} className="keen-slider">
-      <div className="keen-slider__slide">
-        <FilmCard />
-      </div>
-      <div className="keen-slider__slide">
-        <FilmCard />
-      </div>
-      <div className="keen-slider__slide">
-        <FilmCard />
-      </div>
-      <div className="keen-slider__slide">
-        <FilmCard />
-      </div>
+    <div className="space-y-2">
+      <Suspense fallback={<SwiperListSkeleton length={15} />}>
+        <SwiperMediaList />
+      </Suspense>
     </div>
   );
 }

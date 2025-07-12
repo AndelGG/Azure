@@ -45,6 +45,9 @@ export function Header() {
           >
             Azure
           </Link>
+          <div className="flex w-full items-center justify-center gap-2">
+            Поиск
+          </div>
           <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
             <ThemeButton />
             <UserButton />
