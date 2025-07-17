@@ -1,0 +1,54 @@
+{
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig to read more about this file */
+
+    /* Projects */
+    "incremental": true /* Save .tsbuildinfo files to allow for incremental compilation of projects. */,
+
+    /* Language and Environment */
+    "target": "ES2023" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "jsx": "preserve" /* Specify what JSX code is generated. */,
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
+
+    /* Modules */
+    "baseUrl": "./" /* Specify the base directory to resolve non-relative module names. */,
+    "module": "ESNext" /* Specify what module code is generated. */,
+    "moduleResolution": "bundler" /* Specify how TypeScript looks up a file from a given module specifier. */,
+    "paths": {
+      "@/*": ["./src/*"]
+    } /* Specify a set of entries that re-map imports to additional lookup locations. */,
+    "resolveJsonModule": true /* Enable importing .json files. */,
+    /* JavaScript Support */
+    "allowJs": true /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */,
+
+    /* Type Checking */
+    "strict": true /* Enable all strict type-checking options. */,
+    "strictBindCallApply": true /* Check that the arguments for 'bind', 'call', and 'apply' methods match the original function. */,
+    "strictNullChecks": true /* When type checking, take into account 'null' and 'undefined'. */,
+    "noFallthroughCasesInSwitch": true /* Enable error reporting for fallthrough cases in switch statements. */,
+    "noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied 'any' type. */,
+
+    /* Emit */
+    "noEmit": true /* Disable emitting files from a compilation. */,
+    "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
+    "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
+    /* Interop Constraints */
+    "isolatedModules": true /* Ensure that each file can be safely transpiled without relying on other imports. */,
+
+    /* Completeness */
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
+
+    /* Plugins */
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ] /* List of language service plugins to run inside the editor. */
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
