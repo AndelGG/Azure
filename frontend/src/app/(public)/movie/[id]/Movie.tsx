@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { AndelUrl } from '@/app/(constants)';
 import {
   AspectRatio,
   badgeVariants,
@@ -12,44 +13,19 @@ import {
 } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
-export const revalidate = 600;
-
-// Сделать для фильмов
-// export async function generateMetadata({
-//   params,
-// }: {
-//   params: Promise<{ slug: string }>;
-// }): Promise<Metadata> {
-//   const slug = (await params).slug;
-//   const anime = await getAnime({ params: { slug } }).catch(() => notFound());
-
-//   return {
-//     title: anime.data.russianTitle ?? anime.data.romajiTitle,
-//     description: anime.data.description,
-//     openGraph: {
-//       images: [anime.data.poster ?? ''],
-//       title: anime.data.russianTitle ?? anime.data.romajiTitle ?? '',
-//       type: 'website',
-//     },
-//     twitter: {
-//       images: [anime.data.poster ?? ''],
-//       title: anime.data.russianTitle ?? anime.data.romajiTitle ?? '',
-//     },
-//     alternates: {
-//       canonical: `/anime/${slug}`,
-//     },
-//   };
-// }
-
-export default function FilmPage() {
+export function Movie({ movie }) {
+  console.log(movie);
   return (
     <>
       <div className="bg-muted relative h-72 overflow-hidden">
         <Image
           fill
-          alt={'banner'}
-          className={cn('size-full object-cover object-center', 'blur-md')}
-          src={'/testbanner.jpg'}
+          className={cn(
+            'size-full object-cover object-center',
+            movie.banner && 'blur-md',
+          )}
+          alt={`Banner ${movie.title}`}
+          src={`${AndelUrl}/movies/banner/${movie.banner}` || ''}
         />
       </div>
       <div className="container">
@@ -59,10 +35,10 @@ export default function FilmPage() {
               <AspectRatio ratio={2 / 3}>
                 <Image
                   fill
-                  alt={'poster'}
+                  alt={`Poster ${movie.title}`}
                   className="size-full object-cover object-center select-none"
                   sizes="600px"
-                  src={'/testposter.jpg'}
+                  src={`${AndelUrl}/movies/posters/${movie.poster}` || ''}
                 />
               </AspectRatio>
             </div>
@@ -84,21 +60,17 @@ export default function FilmPage() {
           <div className="mt-3 mb-6 flex grow flex-col gap-2.5 max-sm:mt-0">
             <div className="flex flex-col">
               <Typography h3 as="h1">
-                Человек-паук возвращение домой
+                {movie.title} {movie.release_year}
               </Typography>
-              <Typography muted>MARVEL STUDIOS</Typography>
+              <Typography muted>{movie.author}</Typography>
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <Link href="/" className={cn(badgeVariants())}>
-                Экшен
-              </Link>
-              <Link href="/" className={cn(badgeVariants())}>
-                Боевик
-              </Link>
-              <Link href="/" className={cn(badgeVariants())}>
-                Шутер
-              </Link>
+              {movie.tags.map((tag) => (
+                <Link href="/" key={tag.id} className={cn(badgeVariants())}>
+                  {tag.genre}
+                </Link>
+              ))}
             </div>
 
             <Tabs defaultValue="episodes">

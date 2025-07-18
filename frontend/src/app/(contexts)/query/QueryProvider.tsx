@@ -1,6 +1,6 @@
 'use client';
 
-import { ResponseError } from '@siberiacancode/fetches';
+import type { ResponseError } from '@siberiacancode/fetches';
 import {
   MutationCache,
   QueryCache,

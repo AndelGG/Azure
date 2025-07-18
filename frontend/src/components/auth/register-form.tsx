@@ -5,9 +5,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { ROUTES } from '@/app/(constants)';
+import { AUTH, ROUTES } from '@/app/(constants)';
 import {
   Button,
+  Card,
+  CardContent,
+  CardFooter,
   Form,
   FormControl,
   FormField,
@@ -66,81 +69,83 @@ export function RegisterForm() {
             Зарегистрируйте свой аккаунт для продолжения
           </p>
         </div>
-        <div className="border-muted bg-background flex w-full flex-col gap-8 rounded-md border px-6 py-12 shadow-xl">
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-              <FormField
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Имя пользователя</FormLabel>
-                    <FormControl>
-                      <Input
-                        required
-                        className="bg-background"
-                        type="text"
-                        placeholder="Azure"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-                name="username"
-                control={form.control}
-              />
+        <Card className={AUTH.CARD}>
+          <CardContent>
+            <div className="flex flex-col gap-6">
+              <div className={AUTH.CARD_CONTENT_INPUTS}>
+                <FormField
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Имя пользователя</FormLabel>
+                      <FormControl>
+                        <Input
+                          required
+                          className="bg-background"
+                          type="text"
+                          placeholder="Azure"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                  name="username"
+                  control={form.control}
+                />
+              </div>
+              <div className={AUTH.CARD_CONTENT_INPUTS}>
+                <FormField
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Почта</FormLabel>
+                      <FormControl>
+                        <Input
+                          required
+                          className="bg-background"
+                          type="email"
+                          placeholder="Azure@mc.com"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                  name="email"
+                  control={form.control}
+                />
+              </div>
+              <div className={AUTH.CARD_CONTENT_INPUTS}>
+                <FormField
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Пароль</FormLabel>
+                      <FormControl>
+                        <Input
+                          required
+                          className="bg-background"
+                          type="password"
+                          placeholder="Введите пароль"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                  name="password"
+                  control={form.control}
+                />
+              </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <FormField
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Почта</FormLabel>
-                    <FormControl>
-                      <Input
-                        required
-                        className="bg-background"
-                        type="email"
-                        placeholder="Azure@mc.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-                name="email"
-                control={form.control}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <FormField
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Пароль</FormLabel>
-                    <FormControl>
-                      <Input
-                        required
-                        className="bg-background"
-                        type="password"
-                        placeholder="Введите пароль"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-                name="password"
-                control={form.control}
-              />
-            </div>
-            <div className="flex flex-col gap-4">
-              <Button className="mt-2 w-full cursor-pointer" type="submit">
-                {isPending ? 'Загрузка...' : 'Зарегистрироваться'}
-              </Button>
-              <Button className="w-full cursor-pointer" variant="outline">
-                Продолжить с помощью Google
-              </Button>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+          <CardFooter className={AUTH.CARD_FOOTER}>
+            <Button className="mt-2 w-full cursor-pointer" type="submit">
+              {isPending ? 'Загрузка...' : 'Зарегистрироваться'}
+            </Button>
+            <Button className="w-full cursor-pointer" variant="outline">
+              Продолжить с помощью Google
+            </Button>
+          </CardFooter>
+        </Card>
         <div className="text-muted-foreground flex justify-center gap-1 text-sm">
           <p>Есть аккаунт?</p>
           <Link

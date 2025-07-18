@@ -4,7 +4,12 @@ import { Loader2Icon } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
-import { Button, buttonVariants } from '@/components/ui';
+import {
+  Button,
+  buttonVariants,
+  NavigationMenu,
+  NavigationMenuList,
+} from '@/components/ui';
 import { cn } from '@/lib/utils';
 
 const ThemeButton = dynamic(
@@ -31,6 +36,30 @@ const UserButton = dynamic(
   },
 );
 
+const CatalogButton = dynamic(
+  () => import('./catalog-button').then((module) => module.CatalogButton),
+  {
+    ssr: false,
+    loading: () => (
+      <Button size="icon" variant="ghost">
+        <Loader2Icon className="animate-spin" />
+      </Button>
+    ),
+  },
+);
+
+const SearchInput = dynamic(
+  () => import('./search-input').then((module) => module.SearchInput),
+  {
+    ssr: false,
+    loading: () => (
+      <Button size="icon" variant="ghost">
+        <Loader2Icon className="animate-spin" />
+      </Button>
+    ),
+  },
+);
+
 export function Header() {
   return (
     <header className="bg-background/80 supports-backdrop-filter:bg-background/80 border-border/25 sticky top-0 z-50 w-full border-b backdrop-blur-2xl">
@@ -45,9 +74,15 @@ export function Header() {
           >
             Azure
           </Link>
+          <NavigationMenu>
+            <NavigationMenuList>
+              <CatalogButton />
+            </NavigationMenuList>
+          </NavigationMenu>
           <div className="flex w-full items-center justify-center gap-2">
-            Поиск
+            <SearchInput />
           </div>
+
           <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
             <ThemeButton />
             <UserButton />

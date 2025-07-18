@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-export default function NotFound() {
+export default function notFound() {
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-5">
       <h1 className="text-5xl font-bold">Страница не найдена</h1>

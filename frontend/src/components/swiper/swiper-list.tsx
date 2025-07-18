@@ -3,6 +3,14 @@
 import type { SwiperMoviesResponse } from '@/generated';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import { cn } from '@/lib/utils';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '../ui';
+import { Card, CardContent } from '../ui/card';
 import { SwiperCard, SwiperCardSkeleton } from './swiper-card';
 import 'swiper/css';
 
@@ -30,7 +38,11 @@ export function SwiperList({ data }: { data: SwiperMoviesResponse[] }) {
                   'flex-shrink-0',
                 )}
               >
-                <SwiperCard title={film.title} poster={film.poster} />
+                <SwiperCard
+                  id={film.id}
+                  title={film.title}
+                  poster={film.poster}
+                />
               </div>
             ))}
           </div>

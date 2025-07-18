@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     default: METADATA.NAME,
     template: `%s - ${METADATA.NAME}`,
   },
-  metadataBase: new URL(METADATA.URL),
+  // metadataBase: new URL(METADATA.URL),
   description: METADATA.DESCRIPTION,
   applicationName: METADATA.NAME,
   keywords: METADATA.KEYWORDS,

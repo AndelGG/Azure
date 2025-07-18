@@ -1,5 +1,6 @@
 export * from './baseResponse';
 export * from './loginRequest';
+export * from './MovieResponse';
 export * from './profileUserParams';
 export * from './registerRequest';
 export * from './swiperMoviesResponse';

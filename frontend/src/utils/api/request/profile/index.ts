@@ -7,7 +7,7 @@ export type GetProfileParams = ProfileUserParams;
 export type GetProfileRequestConfig = FetchesRequestConfig<GetProfileParams>;
 
 export const profile = ({ config, params }: GetProfileRequestConfig) => {
-  apiSadrik.get<BaseResponse>(`profile/${params.username}`, {
+  apiSadrik.get<BaseResponse>(`/profile/${params.username}`, {
     ...config,
     params: { ...params, ...config?.params },
   });
