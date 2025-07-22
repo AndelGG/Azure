@@ -41,3 +41,9 @@ class SQLAlchemyRepository(AbstractRepository):
         res = await self.session.execute(stmt)
         res = res.scalar_one().to_read_model()
         return res
+
+    async def find_by_id(self, id: int):
+        stmt = select(self.model).filter_by(id=id)
+        res = await self.session.execute(stmt)
+        res = res.scalar_one().to_read_model()
+        return res

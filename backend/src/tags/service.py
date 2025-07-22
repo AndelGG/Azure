@@ -1,7 +1,6 @@
 import urllib
 
 from src.movies.schemas import MovieSchema
-from src.tags.schemas import TagsScheme
 from src.unitofwork import IUnitOfWork
 
 
@@ -19,26 +18,16 @@ class MovieService:
                 banner="uuid",
                 description="A mind-bending thriller about dreams within dreams.",
                 release_year=2010,
-                tags=[TagsScheme(id=0, name="Sci-Fi"), TagsScheme(id=1, name="Thriller")],
+                genre=["Sci-Fi", "Thriller"],
                 author= "Christopher Nolan"
             ))
 
         return movies
 
     async def get_movie_by_id(self, uow: IUnitOfWork, id: int) -> MovieSchema:
-        # async with uow:
-        #     movie = await uow.movies.find_by_id(id)
-        #     return movie
-        return MovieSchema(
-            id=id,
-            title="Inception",
-            poster="uuid",
-            banner="uuid",
-            description="A mind-bending thriller about dreams within dreams.",
-            release_year=2010,
-            tags=[TagsScheme(id=0, name="Sci-Fi"), TagsScheme(id=1, name="Thriller")],
-            author="Christopher Nolan"
-        )
+        async with uow:
+            movie = await uow.movies.find_by_id(id)
+            return movie
 
     async def get_poster_by_id(self, uow, id):
         return urllib.request.Request("https://www.shutterstock.com/image-vector/no-result-document-file-data-600nw-2293706569.jpg")

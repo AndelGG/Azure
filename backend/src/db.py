@@ -1,18 +1,17 @@
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import DeclarativeBase
 
 
 engine = create_async_engine('mysql+aiomysql://root@localhost:3306/azure', echo=True)
 
 
-AsyncSessionLocal = sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False
+AsyncSessionLocal = async_sessionmaker(
+    engine, expire_on_commit=False,
 )
 
-Base = declarative_base()
+class Base(DeclarativeBase):
+    pass
 
 
 async def database():

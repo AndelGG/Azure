@@ -23,3 +23,8 @@ async def get_movie_by_id(uow: UOWDep, id: int) -> MovieSchema:
 async def get_poster_by_id(uow: UOWDep, id: str) -> StreamingResponse:
     image = await MovieService().get_poster_by_id(uow, id)
     return StreamingResponse(urllib.request.urlopen(image), media_type="image/jpeg")
+
+@router.get("/banner/{id}")
+async def get_banner_by_id(uow: UOWDep, id: str) -> StreamingResponse:
+    image = await MovieService().get_poster_by_id(uow, id)
+    return StreamingResponse(urllib.request.urlopen(image), media_type="image/jpeg")
