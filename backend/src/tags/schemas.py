@@ -2,4 +2,4 @@ from pydantic import BaseModel
 
 class TagsScheme(BaseModel):
     id: int
-    name: str
+    genre: str

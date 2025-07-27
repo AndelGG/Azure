@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 class AbstractRepository(ABC):
     @abstractmethod
-    async def add_one(self):
+    async def add_one(self, data):
         raise NotImplementedError
 
     @abstractmethod

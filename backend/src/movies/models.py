@@ -5,6 +5,7 @@ from sqlalchemy import Column, ForeignKey, Table, String, Text
 
 from src.movies.schemas import MovieSchema
 from src.db import Base
+from src.tags.models import Tags
 
 association_table = Table(
     "movies_tags",

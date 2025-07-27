@@ -1,0 +1,32 @@
+import httpx
+from abc import ABC, abstractmethod
+
+from src.KodikAPI import SearchResponse
+
+
+class MovieAPI(ABC):
+    @abstractmethod
+    async def get_one(self, name: str):
+        pass
+    @abstractmethod
+    async def get_popular(self, count: int):
+        pass
+
+class KodikAPI(MovieAPI):
+    def __init__(self, base_url: str):
+        self.base_url = base_url
+
+    async def get_one(self, slug: str):
+        async with httpx.AsyncClient() as client:
+            name = slug.replace(' ', '%20')
+            response = await client.get(f"{self.base_url.replace("route", "search")}&title_orig={name}&limit=1&with_material_data=true")
+            movie = SearchResponse(**response.json())
+            return movie.results[0]
+
+    async def get_popular(self, count: int):
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{self.base_url.replace("route", "list")}&limit={count}&with_material_data=true")
+
+            popular = SearchResponse(**response.json())
+
+            return popular.results

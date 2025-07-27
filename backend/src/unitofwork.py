@@ -1,13 +1,16 @@
 from abc import ABC, abstractmethod
 from typing import Type
 
+from src.config import settings
 from src.db import database
+from src.movie_api import KodikAPI
 from src.movies.repository import MovieRepository
 
 
 # https://github1s.com/cosmicpython/code/tree/chapter_06_uow
 class IUnitOfWork(ABC):
     movies: Type[MovieRepository]
+    movie_api: Type[KodikAPI]
 
     @abstractmethod
     def __init__(self):
@@ -33,11 +36,13 @@ class IUnitOfWork(ABC):
 class UnitOfWork:
     def __init__(self):
         self.session_factory = database
+        self.movie_api = KodikAPI(f"https://kodikapi.com/route?token={settings.KODIK_API_KEY}")
 
     async def __aenter__(self):
         self.session = self.session_factory()
 
         self.movies = MovieRepository(self.session)
+        return self
 
     async def __aexit__(self, *args):
         await self.rollback()
