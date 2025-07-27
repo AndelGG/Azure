@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useDebounceValue } from '@siberiacancode/reactuse';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -37,9 +38,10 @@ export function RegisterForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
-      email: '',
-      password: '',
+      // проверить
+      username: useDebounceValue('', 300),
+      email: useDebounceValue('', 300),
+      password: useDebounceValue('', 300),
     },
   });
 

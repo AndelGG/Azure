@@ -1,27 +1,23 @@
 'use client';
 
-import type { SwiperMoviesResponse } from '@/generated';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import { cn } from '@/lib/utils';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '../ui';
-import { Card, CardContent } from '../ui/card';
-import { SwiperCard, SwiperCardSkeleton } from './swiper-card';
+import { MovieCard, MovieCardSkeleton } from './movie-card';
 import 'swiper/css';
 
-export function SwiperList({ data }: { data: SwiperMoviesResponse[] }) {
-  if (!data) {
+interface MovieListProps {
+  data: { id: number; slug: string; title: string; poster: string }[];
+}
+
+export function MovieList({ data }: MovieListProps) {
+  if (!data || data.length === 0) {
     return <span>No data...</span>;
   }
 
   return (
     <div className="w-full">
-      <div className="mx-auto mt-10 mr-15 ml-15 overflow-x-hidden">
+      <div className="mx-auto mt-5 mr-15 ml-15 overflow-x-hidden">
+        <p className="mb-5 text-xl font-semibold">Популярные</p>
         <ScrollContainer
           className="cursor-grab active:cursor-grabbing"
           vertical={false}
@@ -29,19 +25,19 @@ export function SwiperList({ data }: { data: SwiperMoviesResponse[] }) {
           nativeMobileScroll={true}
         >
           <div className="flex flex-nowrap gap-5">
-            {data.map((film, index) => (
+            {data.map((movie, index) => (
               <div
-                key={film.id}
+                key={movie.id}
                 className={cn(
                   '!w-auto',
                   index !== 0 ? 'ml-5' : '',
                   'flex-shrink-0',
                 )}
               >
-                <SwiperCard
-                  id={film.id}
-                  title={film.title}
-                  poster={film.poster}
+                <MovieCard
+                  slug={movie.slug}
+                  title={movie.title}
+                  poster={movie.poster}
                 />
               </div>
             ))}
@@ -52,11 +48,11 @@ export function SwiperList({ data }: { data: SwiperMoviesResponse[] }) {
   );
 }
 
-interface SwiperListSkeletonProps {
+interface MovieListSkeletonProps {
   length?: number;
 }
 
-export function SwiperListSkeleton({ length = 15 }: SwiperListSkeletonProps) {
+export function MovieListSkeleton({ length = 15 }: MovieListSkeletonProps) {
   return (
     <div className="w-full">
       <div className="mx-auto mt-10 mr-15 ml-15 overflow-x-hidden">
@@ -76,7 +72,7 @@ export function SwiperListSkeleton({ length = 15 }: SwiperListSkeletonProps) {
                   'min-w-[150px] flex-shrink-0',
                 )}
               >
-                <SwiperCardSkeleton />
+                <MovieCardSkeleton />
               </div>
             ))}
           </div>

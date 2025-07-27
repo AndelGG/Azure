@@ -5,6 +5,7 @@ import { GeistSans } from 'geist/font/sans';
 
 import { METADATA, ROUTES } from '@/app/(constants)';
 
+import { Toaster } from '@/components/ui';
 import { Provider } from './provider';
 import '@/assets/styles/tailwind.css';
 
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
       </head>
       <body className="min-h-screen font-sans antialiased">
         <Provider>{children}</Provider>
+        <Toaster position="bottom-right" />
       </body>
     </html>
   );

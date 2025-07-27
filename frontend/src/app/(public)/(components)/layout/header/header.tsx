@@ -11,6 +11,7 @@ import {
   NavigationMenuList,
 } from '@/components/ui';
 import { cn } from '@/lib/utils';
+import { SearchInput } from './search-input';
 
 const ThemeButton = dynamic(
   () => import('./theme-button').then((module) => module.ThemeButton),
@@ -48,18 +49,6 @@ const CatalogButton = dynamic(
   },
 );
 
-const SearchInput = dynamic(
-  () => import('./search-input').then((module) => module.SearchInput),
-  {
-    ssr: false,
-    loading: () => (
-      <Button size="icon" variant="ghost">
-        <Loader2Icon className="animate-spin" />
-      </Button>
-    ),
-  },
-);
-
 export function Header() {
   return (
     <header className="bg-background/80 supports-backdrop-filter:bg-background/80 border-border/25 sticky top-0 z-50 w-full border-b backdrop-blur-2xl">
@@ -79,6 +68,7 @@ export function Header() {
               <CatalogButton />
             </NavigationMenuList>
           </NavigationMenu>
+
           <div className="flex w-full items-center justify-center gap-2">
             <SearchInput />
           </div>

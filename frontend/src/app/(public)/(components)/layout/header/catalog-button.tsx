@@ -13,8 +13,8 @@ import {
 export function CatalogButton() {
   return (
     <NavigationMenuItem>
-      <NavigationMenuTrigger>
-        <Library size="icon" />
+      <NavigationMenuTrigger className="cursor-pointer">
+        <Library size="20" />
       </NavigationMenuTrigger>
       <NavigationMenuContent className="bg-(--background)">
         <ul className="grid gap-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
@@ -24,19 +24,15 @@ export function CatalogButton() {
                 href="/"
                 className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-6 no-underline outline-hidden select-none focus:shadow-md"
               >
-                <div className="mt-4 mb-2 text-lg font-medium">Azure</div>
+                <div className="mt-4 mb-2 text-lg font-medium">Каталог</div>
                 <p className="text-muted-foreground text-sm leading-tight">
-                  Cовременный сервис для просмотра фильмов и сериалов в высоком
-                  качестве и без рекламы
+                  Каталог всех фильмов, сериалов и аниме
                 </p>
               </Link>
             </NavigationMenuLink>
           </li>
-          <ListItem href="/" title="Каталог">
-            Каталог всех фильмов и сериалов
-          </ListItem>
           <ListItem href="/" title="Жанры">
-            Выбрать любой жанр и определиться с фильмом либо сериалом
+            Выбрать любой жанр и определиться с просмотром
           </ListItem>
         </ul>
       </NavigationMenuContent>

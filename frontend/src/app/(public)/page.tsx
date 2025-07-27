@@ -1,14 +1,11 @@
-import { Suspense } from 'react';
-import { SwiperListSkeleton, SwiperMediaList } from '@/components/swiper';
+import { MovieMediaList } from '@/components/movie';
 
 export const revalidate = 600;
 
 export default function RootPage() {
   return (
     <div className="space-y-2">
-      <Suspense fallback={<SwiperListSkeleton length={15} />}>
-        <SwiperMediaList />
-      </Suspense>
+      <MovieMediaList />
     </div>
   );
 }

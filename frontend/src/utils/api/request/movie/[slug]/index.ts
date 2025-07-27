@@ -1,16 +1,15 @@
 import type { FetchesRequestConfig } from '@siberiacancode/fetches';
 import type { MovieResponse } from '@/generated';
-import { apiAndel } from '../../instance';
+import { apiAndel } from '../../../instance';
 
 export interface GetMovieParams {
-  id: number;
+  slug: string;
 }
 
 export type GetMovieRequestConfig = FetchesRequestConfig<GetMovieParams>;
 
-export const moviepage = ({ config, params }: GetMovieRequestConfig) => {
-  return apiAndel.get<MovieResponse>(`/movies/${params.id}`, {
+export const getMovie = ({ config, params }: GetMovieRequestConfig) =>
+  apiAndel.get<MovieResponse>(`/movies/${params.slug}`, {
     ...config,
     params: { ...params, ...config?.params },
   });
-};

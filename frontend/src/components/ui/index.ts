@@ -7,6 +7,8 @@ export * from './input';
 export * from './label';
 export * from './list-item';
 export * from './navigation-menu';
+export * from './separator';
 export * from './skeleton';
+export * from './sonner';
 export * from './tabs';
 export * from './typography';

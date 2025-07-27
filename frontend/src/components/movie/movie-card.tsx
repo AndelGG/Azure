@@ -1,28 +1,27 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { AndelUrl } from '@/app/(constants)';
 import { cn } from '@/lib/utils';
-import { AspectRatio, Card, CardContent, Skeleton } from '../ui';
+import { AspectRatio, Skeleton } from '../ui';
 
-interface SwiperCardProps {
-  id: number;
-  title: string;
-  poster: string;
+interface MovieCardProps {
+  slug: string;
+  title?: string | null;
+  poster?: string | null;
 }
 
-export function SwiperCard({ id, poster, title }: SwiperCardProps) {
+export function MovieCard({ slug, title, poster }: MovieCardProps) {
   return (
     <div className={cn('relative flex w-36 max-w-full flex-col gap-1')}>
-      <Link href={`/movie/${id}`} prefetch>
+      <Link href={`/movie/${slug.replace(/\s+/g, '_')}`} prefetch>
         <div className="bg-muted w-full overflow-hidden rounded-md select-none">
           <AspectRatio ratio={2 / 3}>
             {poster && (
               <Image
                 fill
-                alt={title ?? 'Poster'}
+                alt={slug ?? 'Poster'}
                 className="pointer-events-none relative size-full object-cover object-center select-none"
                 sizes="600px"
-                src={`${AndelUrl}/movies/posters/${poster}`}
+                src={poster}
                 priority
               />
             )}
@@ -31,7 +30,7 @@ export function SwiperCard({ id, poster, title }: SwiperCardProps) {
       </Link>
       {title && (
         <Link
-          href={`/movie/${id}`}
+          href={`/movie/${slug}`}
           prefetch
           className="line-clamp-2 w-full text-sm text-pretty text-ellipsis"
         >
@@ -42,11 +41,11 @@ export function SwiperCard({ id, poster, title }: SwiperCardProps) {
   );
 }
 
-export interface SwiperCardSkeletonProps {
+export interface MovieCardSkeletonProps {
   className?: string;
 }
 
-export function SwiperCardSkeleton({ className }: SwiperCardSkeletonProps) {
+export function MovieCardSkeleton({ className }: MovieCardSkeletonProps) {
   return (
     <div
       className={cn('relative flex w-36 max-w-full flex-col gap-1', className)}
