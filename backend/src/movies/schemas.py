@@ -4,7 +4,7 @@ from src.tags.schemas import TagsScheme
 
 
 class MovieSchema(BaseModel):
-    id: int
+    id: str
     slug: str
     age_rating: int
     title: str
@@ -15,22 +15,15 @@ class MovieSchema(BaseModel):
     year: int | None
     duration: int | None
     episodes_count: int | None
-    kinopoisk_rating: int | None
+    kinopoisk_rating: float | None
+    createdAt: str | None
     updatedAt: str | None
     screenshots: list[str] | None
     seasons: list[str] | None
-    countries: str | None
+    countries: list[str] | None
 
 class SearchSchema(BaseModel):
-    id: int
+    id: str
     slug: str
     poster: str | None
-
-    class Config:
-        orm_mode = True
-        allow_population_by_field_name = True
-        fields = {
-            'id': 'id',
-            'slug': 'slug',
-            'poster': 'poster'
-        }
+    title: str

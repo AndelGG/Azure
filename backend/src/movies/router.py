@@ -20,6 +20,12 @@ async def get_popular_movies(uow: UOWDep, count: int = 12) -> list[SearchSchema]
 #     movie = await MovieService().get_movie_by_id(uow, id)
 #     return movie
 
+@router.get("/short-search/")
+async def get_short_by_search(uow: UOWDep, search: str) -> list[SearchSchema]:
+    search_response = await MovieService().get_short_by_search(uow, search)
+    return search_response
+
+
 @router.get("/{slug}")
 async def get_movie_by_slug(uow: UOWDep, slug: str) -> MovieSchema:
     movie = await MovieService().get_movie_by_slug(uow, slug)

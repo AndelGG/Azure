@@ -8,10 +8,11 @@ class MovieService:
         search_response = await uow.movie_api.get_popular(count)
 
         return [SearchSchema(
-            id=i,
+            id=material.id,
             slug=material.title_orig or "unknown-slug",
             poster=material.material_data.poster_url if material.material_data else None,
-        ) for i, material in enumerate(search_response)]
+            title=material.title,
+        ) for material in search_response]
 
     async def get_movie_by_id(self, uow: IUnitOfWork, id: int) -> MovieSchema:
         return MovieSchema(
@@ -28,9 +29,8 @@ class MovieService:
 
     async def get_movie_by_slug(self, uow, slug: str) -> MovieSchema:
         material = await uow.movie_api.get_one(slug)
-        # TODO: KodikID
         return MovieSchema(
-            id=1,
+            id=material.id,
             slug=material.title_orig or "unknown-slug",
             age_rating=material.material_data.minimal_age if material.material_data else None,
             title=material.title,
@@ -44,9 +44,19 @@ class MovieService:
             duration=material.material_data.duration if material.material_data else None,
             episodes_count=material.episodes_count,
             kinopoisk_rating=material.material_data.kinopoisk_rating if material.material_data else None,
+            createdAt=material.created_at.isoformat() if material.created_at else None,
             updatedAt=material.updated_at.isoformat() if material.updated_at else None,
             screenshots=material.screenshots,
             seasons=material.seasons,
             countries=material.material_data.countries if material.material_data else None
         )
 
+    async def get_short_by_search(self, uow: IUnitOfWork, search: str) -> list[SearchSchema]:
+        search_response = await uow.movie_api.search(search, limit=5)
+
+        return [SearchSchema(
+            id=material.id,
+            slug=material.title_orig or "unknown-slug",
+            poster=material.material_data.poster_url if material.material_data else None,
+            title=material.title,
+        ) for material in search_response]

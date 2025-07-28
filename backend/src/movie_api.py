@@ -18,9 +18,10 @@ class KodikAPI(MovieAPI):
 
     async def get_one(self, slug: str):
         async with httpx.AsyncClient() as client:
-            name = slug.replace(' ', '%20')
+            name = slug.replace('_', '%20')
             response = await client.get(f"{self.base_url.replace("route", "search")}&title_orig={name}&limit=1&with_material_data=true")
             movie = SearchResponse(**response.json())
+            print(movie)
             return movie.results[0]
 
     async def get_popular(self, count: int):
@@ -30,3 +31,9 @@ class KodikAPI(MovieAPI):
             popular = SearchResponse(**response.json())
 
             return popular.results
+
+    async def search(self, query: str, limit: int = 5, prompt: str = ""):
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{self.base_url.replace('route', 'search')}&title={query}&limit={limit}&with_material_data=true")
+            search_response = SearchResponse(**response.json())
+            return search_response.results
