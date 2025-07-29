@@ -52,7 +52,7 @@ export function MovieCardSkeleton({ className }: MovieCardSkeletonProps) {
     >
       <div className="overflow-hidden rounded-md">
         <AspectRatio ratio={2 / 3}>
-          <Skeleton className="size-full" />
+          <Skeleton className="size-full h-50 w-50" />
         </AspectRatio>
       </div>
 

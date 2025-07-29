@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     description: METADATA.DESCRIPTION,
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: '/AzureFavicon.ico',
   },
   alternates: {
     canonical: ROUTES.ROOT,

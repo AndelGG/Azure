@@ -1,4 +1,4 @@
-import { MovieMediaList } from '@/components/movie';
+import { MovieMediaList } from '@/components/swiper';
 
 export const revalidate = 600;
 

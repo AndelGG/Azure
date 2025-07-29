@@ -1,5 +1,5 @@
 import type { MovieResponse } from '@/generated';
-import { typeMapping } from '@/app/(constants)';
+import { statusMapping, typeMapping } from '@/app/(constants)';
 import { cn } from '@/lib/utils';
 
 interface DetailsItemProps {
@@ -29,7 +29,14 @@ function DetailsItem({ label, value, danger }: DetailsItemProps) {
 interface DetailsProps {
   movie: Pick<
     MovieResponse,
-    'age_rating' | 'countries' | 'duration' | 'seasons' | 'year'
+    | 'age_rating'
+    | 'anime_status'
+    | 'anime_studios'
+    | 'countries'
+    | 'duration'
+    | 'seasons'
+    | 'type'
+    | 'year'
   >;
 }
 
@@ -41,15 +48,11 @@ export function Details({ movie }: DetailsProps) {
         label="Возрастное ограничение"
         value={`${movie.age_rating}+`}
       />
-      <DetailsItem label="Год выхода" value={movie.year} />
-      <DetailsItem
-        label="Тип"
-        value={movie.seasons ? typeMapping.SERIES : typeMapping.MOVIE}
-      />
+      <DetailsItem label="Студия" value={movie.anime_studios} />
+      <DetailsItem label="Статус" value={statusMapping[movie.anime_status]} />
+      <DetailsItem label="Год выпуска" value={movie.year} />
+      <DetailsItem label="Тип" value={typeMapping[movie.type]} />
       <DetailsItem label="Страна" value={movie.countries} />
-      {movie.seasons && (
-        <DetailsItem label="Сезонов" value={[movie.seasons].length} />
-      )}
       {!movie.seasons && (
         <DetailsItem
           label="Продолжительность эпизода"

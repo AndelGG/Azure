@@ -2,7 +2,7 @@
 
 import { useAsync } from '@siberiacancode/reactuse';
 import { getSwiper } from '@/utils/api/request';
-import { MovieList, MovieListSkeleton } from './movie-list';
+import { MovieList, MovieListSkeleton } from '.';
 
 export function MovieMediaList() {
   const getSwiperQuery = useAsync(() => getSwiper({}), []);

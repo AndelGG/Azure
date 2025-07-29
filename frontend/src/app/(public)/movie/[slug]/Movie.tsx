@@ -5,13 +5,16 @@ import { Loader2Icon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, useParams } from 'next/navigation';
-import { AndelUrl } from '@/app/(constants)';
-import { EpisodeSelector } from '@/components/episode/episode-selector';
+import React, { useMemo } from 'react';
+import ScrollContainer from 'react-indiana-drag-scroll';
+import { Frame } from '@/components/movie';
 import { Description } from '@/components/movie/description';
 import { Details } from '@/components/movie/details';
+import { KodikPlayer } from '@/components/player/kodik-player';
 import {
   AspectRatio,
   badgeVariants,
+  Button,
   buttonVariants,
   Skeleton,
   Tabs,
@@ -22,28 +25,39 @@ import {
 } from '@/components/ui';
 import { cn } from '@/lib/utils';
 import { getMovie } from '@/utils/api/request';
-import { getMovieEpisodes } from '@/utils/api/request/movie';
-import ScrollContainer from 'react-indiana-drag-scroll';
+import type { MovieResponse } from '@/generated';
 
 export function Movie() {
-  const slug = useParams().slug;
+  const slug = useParams().slug as string;
   const getMovieQuery = useAsync(() => getMovie({ params: { slug } }), []);
-  const getEpisodeQuery = useAsync(
-    () =>
-      getMovieEpisodes({
-        params: { uuid: getMovieQuery.data?.data.id as number },
-      }),
-    [],
-  );
 
-  const movie = getMovieQuery.data?.data;
-  const randomBanner =
-    movie?.screenshots[Math.floor(Math.random() * movie.screenshots.length)];
+  const movie = getMovieQuery.data?.data as MovieResponse | undefined;
+
+  const [selectedSeason, setSelectedSeason] = React.useState<number>(1);
+  const [selectedEpisode, setSelectedEpisode] = React.useState<number>(1);
+
   console.log(movie);
 
-  const episodes = getEpisodeQuery.data?.data;
+  // Получаем список сезонов и серий (примерная структура, поправь если отличается)
+  const seasons = movie?.seasons || [1];
+  // Если есть массив сезонов с сериями:
+  const episodes = React.useMemo(() => {
+    // Если просто массив эпизодов:
+    if (movie?.episodes_count) {
+      return Array.from({ length: movie.episodes_count }, (_, i) => i + 1);
+    }
+    // Если ничего нет, по умолчанию 1 серия
+    return [1];
+  }, [movie]);
 
-  // console.log(episodes);
+  const randomBanner = useMemo(() => {
+    if (Array.isArray(movie?.screenshots) && movie.screenshots.length > 0) {
+      return movie.screenshots[
+        Math.floor(Math.random() * movie.screenshots.length)
+      ];
+    }
+    return movie?.poster || '';
+  }, [movie]);
 
   return (
     <>
@@ -56,7 +70,7 @@ export function Movie() {
               fill
               alt={`Banner ${movie?.title}`}
               className={cn('size-full object-cover object-center blur-md')}
-              src={randomBanner || ''}
+              src={randomBanner}
               priority
             />
           </div>
@@ -75,17 +89,18 @@ export function Movie() {
                     />
                   </AspectRatio>
                 </div>
-                <Link
-                  href={`/episode/${episodes}`}
+
+                <Button
                   className={cn(
                     buttonVariants({ variant: 'default' }),
                     'w-full',
                   )}
                 >
-                  Начать просмотр
-                </Link>
+                  ☆
+                </Button>
+
                 <div className="bg-card flex flex-col gap-3 rounded-md border p-3 max-sm:hidden">
-                  <Details movie={movie} />
+                  <Details movie={movie!} />
                 </div>
               </div>
 
@@ -97,7 +112,7 @@ export function Movie() {
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  {movie?.tags.map((tag) => (
+                  {movie?.tags?.map((tag) => (
                     <Link href="/" key={tag.id} className={cn(badgeVariants())}>
                       {tag.genre.charAt(0).toUpperCase() + tag.genre.slice(1)}
                     </Link>
@@ -105,51 +120,144 @@ export function Movie() {
                 </div>
 
                 <div className="mt-3 flex w-full flex-col gap-3">
-                  <p className="text-xl font-semibold">Кадры</p>
-                  <ScrollContainer
-                    className="cursor-grab rounded-md border-2 active:cursor-grabbing"
-                    vertical={false}
-                    horizontal={true}
-                    nativeMobileScroll={true}
-                  >
-                    <div className="flex flex-nowrap gap-10 p-3">
-                      {movie?.screenshots?.length &&
-                        movie?.screenshots?.map((screnshot, index) => (
-                          <Image
-                            key={index}
-                            alt={`Кадр ${index}`}
-                            className="size-full select-none"
-                            height={350}
-                            src={screnshot || null}
-                            width={350}
-                            priority
-                          />
-                        ))}
-                    </div>
-                  </ScrollContainer>
+                  <Frame screenshots={movie?.screenshots || []} />
                 </div>
 
-                <Tabs defaultValue="description">
+                <Description value={movie?.description} />
+
+                <div className="mt-4 flex">
+                  <div className="flex w-full flex-col">
+                    <KodikPlayer
+                      className="aspect-video rounded-md"
+                      iframeUrl={movie?.iframe_url || ''}
+                      episode={selectedEpisode}
+                      season={selectedSeason}
+                    />
+                    <div className="mt-4 mb-4">
+                      {seasons.length && (
+                        <div className="mb-2 flex gap-2">
+                          {seasons.map((season: number) => (
+                            <Button
+                              key={season}
+                              className={cn(
+                                buttonVariants({ variant: 'outline' }),
+                                'border px-2 py-1 text-white',
+                                selectedSeason === season &&
+                                  'border-2 border-purple-600',
+                              )}
+                              onClick={() => {
+                                setSelectedSeason(season);
+                                setSelectedEpisode(1);
+                              }}
+                            >
+                              {season} сезон
+                            </Button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex w-full flex-col gap-3">
+                      <ScrollContainer
+                        className="cursor-grab active:cursor-grabbing"
+                        vertical={false}
+                        horizontal={true}
+                        nativeMobileScroll={true}
+                      >
+                        <div className="flex w-0 flex-nowrap gap-3">
+                          {episodes.map((episode: number) => (
+                            <Button
+                              key={episode}
+                              className={cn(
+                                buttonVariants({ variant: 'outline' }),
+                                'flex-shrink-0 border px-5 py-5 text-white',
+                                selectedEpisode === episode && 'border-2',
+                              )}
+                              onClick={() => setSelectedEpisode(episode)}
+                            >
+                              {episode}
+                            </Button>
+                          ))}
+                        </div>
+                      </ScrollContainer>
+                    </div>
+                  </div>
+                </div>
+
+                {/* <Tabs defaultValue="description">
                   <TabsList className="my-2 gap-4">
                     <TabsTrigger className="cursor-pointer" value="description">
                       Описание
                     </TabsTrigger>
 
-                    {!!episodes && (
-                      <TabsTrigger value="episodes">Эпизоды</TabsTrigger>
-                    )}
+                    <TabsTrigger className="cursor-pointer" value="watching">
+                      Смотреть
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="description">
                     <Description value={movie?.description} />
                   </TabsContent>
 
-                  {!!episodes && (
-                    <TabsContent className="flex flex-col" value="episodes">
-                      <EpisodeSelector episodes={episodes} />
-                    </TabsContent>
-                  )}
-                </Tabs>
+                  <TabsContent value="watching">
+                    <div className="mt-4 flex">
+                      <div className="flex flex-col">
+                        <KodikPlayer
+                          className="aspect-video w-250 rounded-md"
+                          iframeUrl={movie?.iframe_url || ''}
+                          episode={selectedEpisode}
+                          season={selectedSeason}
+                        />
+                        <div className="mt-4 mb-4">
+                          {seasons.length && (
+                            <div className="mb-2 flex gap-2">
+                              {seasons.map((season: number) => (
+                                <Button
+                                  key={season}
+                                  className={cn(
+                                    buttonVariants({ variant: 'outline' }),
+                                    'border px-2 py-1 text-white',
+                                    selectedSeason === season &&
+                                      'border-2 border-purple-600',
+                                  )}
+                                  onClick={() => {
+                                    setSelectedSeason(season);
+                                    setSelectedEpisode(1);
+                                  }}
+                                >
+                                  {season} сезон
+                                </Button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex w-full flex-col gap-3">
+                          <ScrollContainer
+                            className="cursor-grab active:cursor-grabbing"
+                            vertical={false}
+                            horizontal={true}
+                            nativeMobileScroll={true}
+                          >
+                            <div className="flex w-0 flex-nowrap gap-3">
+                              {episodes.map((episode: number) => (
+                                <Button
+                                  key={episode}
+                                  className={cn(
+                                    buttonVariants({ variant: 'outline' }),
+                                    'flex-shrink-0 border px-5 py-5 text-white',
+                                    selectedEpisode === episode && 'border-2',
+                                  )}
+                                  onClick={() => setSelectedEpisode(episode)}
+                                >
+                                  {episode}
+                                </Button>
+                              ))}
+                            </div>
+                          </ScrollContainer>
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs> */}
               </div>
             </div>
           </div>
@@ -159,6 +267,7 @@ export function Movie() {
   );
 }
 
+// SKELETON
 function MovieSkeleton() {
   return (
     <>

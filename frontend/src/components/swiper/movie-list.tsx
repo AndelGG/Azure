@@ -2,8 +2,7 @@
 
 import ScrollContainer from 'react-indiana-drag-scroll';
 import { cn } from '@/lib/utils';
-import { MovieCard, MovieCardSkeleton } from './movie-card';
-import 'swiper/css';
+import { MovieCard, MovieCardSkeleton } from '.';
 
 interface MovieListProps {
   data: { id: number; slug: string; title: string; poster: string }[];

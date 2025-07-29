@@ -3,10 +3,13 @@ import type { MovieResponse } from '@/generated';
 import { apiAndel } from '../../../instance';
 
 export interface SearchMovieParams {
-  query: string;
+  search: string;
 }
 
 export type SearchMovieRequestConfig = FetchesRequestConfig<SearchMovieParams>;
 
 export const searchMovie = ({ config, params }: SearchMovieRequestConfig) =>
-  apiAndel.post<MovieResponse>(`/search`, params, config);
+  apiAndel.get<MovieResponse>(`/movies/short-search/`, {
+    ...config,
+    params: { ...params, ...config?.params },
+  });
