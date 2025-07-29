@@ -5,7 +5,7 @@ from fastapi.responses import StreamingResponse
 
 from src.KodikAPI import SearchResponse
 from src.dependencies import UOWDep
-from src.movies.schemas import MovieSchema, SearchSchema
+from src.movies.schemas import MovieSchema, SearchSchema, SearchShortSchema
 from src.movies.service import MovieService
 
 router = APIRouter(prefix="/movies", tags=["movies"])
@@ -21,7 +21,7 @@ async def get_popular_movies(uow: UOWDep, count: int = 12) -> list[SearchSchema]
 #     return movie
 
 @router.get("/short-search/")
-async def get_short_by_search(uow: UOWDep, search: str) -> list[SearchSchema]:
+async def get_short_by_search(uow: UOWDep, search: str) -> list[SearchShortSchema]:
     search_response = await MovieService().get_short_by_search(uow, search)
     return search_response
 
