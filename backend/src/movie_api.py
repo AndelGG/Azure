@@ -1,7 +1,9 @@
+from urllib.parse import urlencode
+
 import httpx
 from abc import ABC, abstractmethod
 
-from src.KodikAPI import SearchResponse
+from src.KodikAPI import SearchResponse, Material
 
 
 class MovieAPI(ABC):
@@ -35,9 +37,9 @@ class KodikAPI(MovieAPI):
             # return 404 if error
             return movie.results[0]
 
-    async def get_popular(self, count: int):
+    async def get_popular(self, count: int, spec: dict = "") -> list[Material]:
         async with httpx.AsyncClient() as client:
-            response = await client.get(f"{self.base_url.replace("route", "list")}&limit={count}&with_material_data=true")
+            response = await client.get(f"{self.base_url.replace("route", "list")}&limit={count}&with_material_data=true&{urlencode(spec)}")
 
             popular = SearchResponse(**response.json())
 

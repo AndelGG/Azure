@@ -2,12 +2,14 @@ import uvicorn
 from fastapi import FastAPI
 from src.auth.router import auth_router
 from src.movies.router import router as movies_router
+from src.anime.router import router as anime_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(root_path="/api")
 
 app.include_router(auth_router)
 app.include_router(movies_router)
+app.include_router(anime_router)
 
 app.add_middleware(
     CORSMiddleware,

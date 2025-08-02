@@ -15,11 +15,8 @@ class MovieService:
             slug=f"{material.title_orig}-{material.shikimori_id}" if material.shikimori_id else material.title_orig,
             poster=material.material_data.poster_url if material.material_data else None,
             title=material.title,
-            translations=(TranslationSchema(
-                id=material.translation.id,
-                title=material.translation.title,
-                type=material.translation.type
-        ))) for material in search_response]
+            translations=TranslationSchema(id=material.translation.id, title=material.translation.title, type=material.translation.type)
+        ) for material in search_response]
 
     async def get_movie_by_id(self, uow: IUnitOfWork, id: int) -> MovieSchema:
         return MovieSchema(
