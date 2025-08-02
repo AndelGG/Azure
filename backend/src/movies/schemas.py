@@ -3,6 +3,12 @@ from pydantic import BaseModel
 from src.tags.schemas import TagsScheme
 
 
+class TranslationSchema(BaseModel):
+    id: int
+    title: str
+    type: str
+
+
 class MovieSchema(BaseModel):
     id: str
     slug: str
@@ -25,6 +31,7 @@ class MovieSchema(BaseModel):
     type: str | None
     anime_status: str | None = None
     anime_studios: list[str] | None = None
+    translations: list[TranslationSchema] | None = None
 
 # TODO: anime schema
 
@@ -34,5 +41,13 @@ class SearchSchema(BaseModel):
     poster: str | None
     title: str
 
+class PopularSchema(SearchSchema):
+    translations: list[TranslationSchema] | None = None
+
 class SearchShortSchema(SearchSchema):
     type: str | None
+
+class TranslationSchema(BaseModel):
+    id: int | None = None
+    title: str | None = None
+    type: str | None = None
