@@ -39,8 +39,7 @@ class UnitOfWork:
         self.movie_api = KodikAPI(f"https://kodikapi.com/route?token={settings.KODIK_API_KEY}")
 
     async def __aenter__(self):
-        self.session = self.session_factory()
-
+        self.session = await self.session_factory().__anext__()
         self.movies = MovieRepository(self.session)
         return self
 

@@ -18,13 +18,13 @@ class Movies(Base):
     __tablename__ = 'movies'
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    title: Mapped[str] = mapped_column(String(255))
-    poster: Mapped[str] = mapped_column(String(500))
-    banner: Mapped[str] = mapped_column(String(500))
-    description: Mapped[str] = mapped_column(Text)
+    title: Mapped[str]
+    poster: Mapped[str]
+    banner: Mapped[str]
+    description: Mapped[str]
     release_year: Mapped[int]
     tags: Mapped[List["Tags"]] = relationship(secondary=association_table, back_populates="movies")
-    author: Mapped[str] = mapped_column(String(255))
+    author: Mapped[str]
 
     def to_read_model(self) -> MovieSchema:
         return MovieSchema(

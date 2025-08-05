@@ -58,3 +58,10 @@ class KodikAPI(MovieAPI):
             translations = SearchResponse(**response.json())
 
             return translations.results
+
+    async def get_series_by_id(self, id: int, trans_id: int):
+        async with httpx.AsyncClient() as client:
+            url = f"{self.base_url.replace('route', 'search')}&shikimori_id={id}&with_episodes=true&prioritize_translations={trans_id}"
+            response = await client.get(url)
+            series = SearchResponse(**response.json())
+            return series.results[0]

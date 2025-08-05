@@ -1,3 +1,5 @@
+from typing import Dict
+
 from pydantic import BaseModel
 
 from src.tags.schemas import TagsScheme
@@ -6,8 +8,12 @@ from src.tags.schemas import TagsScheme
 class TranslationSchema(BaseModel):
     id: int
     title: str
-    type: str
+    episodes_count: int | None
+    # episodes: list[str] | None
 
+class EpisodeSchema(BaseModel):
+    episode: int
+    link: str
 
 class MovieSchema(BaseModel):
     id: str
@@ -25,15 +31,12 @@ class MovieSchema(BaseModel):
     created_at: str | None
     updated_at: str | None
     screenshots: list[str] | None
-    seasons: list[str] | None
     countries: list[str] | None
     iframe_url: str | None = None
     type: str | None
     anime_status: str | None = None
     anime_studios: list[str] | None = None
     translations: list[TranslationSchema] | None
-
-# TODO: anime schema
 
 class SearchSchema(BaseModel):
     id: str

@@ -8,30 +8,30 @@ from src.unitofwork import IUnitOfWork
 
 class MovieService:
     async def get_popular_movies(self, uow: IUnitOfWork, count: int) -> list[PopularSchema]:
-        search_response = await uow.movie_api.get_popular(count)
+        search_response = await uow.movie_api.get_popular(min(count * 3, 100))
+        search_results = list()
+        search_slug = set()
 
-        return [PopularSchema(
-            id=material.id,
-            slug=f"{material.title_orig}-{material.shikimori_id}" if material.shikimori_id else material.title_orig,
-            poster=material.material_data.poster_url if material.material_data else None,
-            title=material.title,
-            translations=TranslationSchema(id=material.translation.id, title=material.translation.title, type=material.translation.type)
-        ) for material in search_response]
+        for material in search_response:
 
-    async def get_movie_by_id(self, uow: IUnitOfWork, id: int) -> MovieSchema:
-        return MovieSchema(
+            id = material.shikimori_id or material.title_orig
+
+            if id in search_slug:
+                continue
+
+            search_results.append(PopularSchema(
                 id=id,
-                title="Inception",
-                poster="uuid",
-                banner="uuid",
-                description="A mind-bending thriller about dreams within dreams.",
-                release_year=2010,
-                tags=[TagsScheme(id=0, name="Sci-Fi"), TagsScheme(id=1, name="Thriller")],
-                author= "Christopher Nolan"
-            )
+                slug=f"{material.title_orig}-{material.shikimori_id}" if material.shikimori_id else material.title_orig,
+                poster=material.material_data.poster_url if material.material_data else None,
+                title=material.title,
+                translations=TranslationSchema(id=material.translation.id, title=material.translation.title, episodes_count=material.episodes_count) if material.translation else None,
+            ))
+
+            search_slug.add(id)
+
+        return search_results[:count]
 
     async def get_movie_by_slug(self, uow, slug: str) -> MovieSchema:
-        material = await uow.movie_api.get_one_by_slug(slug)
 
         parts = slug.split("-")
         if len(parts) == 2:
@@ -42,17 +42,10 @@ class MovieService:
 
         material_data = material.material_data if material.material_data else MaterialData()
 
-        translations = await self.get_translations_by_id(uow, material.shikimori_id)
-
-        # Обрабатываем seasons - преобразуем словарь в список строк (номера сезонов)
-        seasons_list = None
-        if hasattr(material, 'seasons') and material.seasons:
-            if isinstance(material.seasons, dict):
-                # Если seasons это словарь, берем ключи (номера сезонов)
-                seasons_list = list(material.seasons.keys())
-            elif isinstance(material.seasons, list):
-                # Если seasons уже список, используем как есть
-                seasons_list = material.seasons
+        if material.shikimori_id:
+            translations = await self.get_translations_by_id(uow, material.shikimori_id)
+        else:
+            translations = None
 
         return MovieSchema(
             id=material.id,
@@ -72,7 +65,6 @@ class MovieService:
             created_at=material.created_at.isoformat() if material.created_at else None,
             updated_at=material.updated_at.isoformat() if material.updated_at else None,
             screenshots=material.screenshots,
-            seasons=seasons_list,  # Используем обработанный список
             countries=material_data.countries if material_data.countries else None,
             iframe_url=material.link,
             type=material.type,
@@ -108,9 +100,12 @@ class MovieService:
     async def get_translations_by_id(self, uow: IUnitOfWork, id: int) -> list[TranslationSchema]:
         translations = await uow.movie_api.get_translations_by_id(id)
 
+        print(translations)
+
         return [TranslationSchema(
             id=material.translation.id if material.translation else None,
             title=material.translation.title if material.translation else None,
-            type=material.translation.type if material.translation else None
+            episodes_count=material.episodes_count if material.episodes_count else 0,
+            # episodes=material.translation.episodes if material.translation and material.translation.episodes else []
         ) for material in translations]
 

@@ -8,25 +8,5 @@ from src.dependencies import UOWDep
 from src.movies.schemas import MovieSchema, SearchSchema, SearchShortSchema, PopularSchema
 from src.movies.service import MovieService
 
-router = APIRouter(prefix="/movies", tags=["movies"])
+router = APIRouter(prefix="/anime", tags=["movies"])
 
-@router.get("/popular")
-async def get_popular_movies(uow: UOWDep, count: int = 12) -> list[PopularSchema]:
-    movies = await MovieService().get_popular_movies(uow, count)
-    return movies
-
-# @router.get("/{id}")
-# async def get_movie_by_id(uow: UOWDep, id: int) -> MovieSchema:
-#     movie = await MovieService().get_movie_by_id(uow, id)
-#     return movie
-
-@router.get("/short-search/")
-async def get_short_by_search(uow: UOWDep, search: str, limit: int = 5) -> list[SearchShortSchema]:
-    search_response = await MovieService().get_short_by_search(uow, search, limit)
-    return search_response
-
-
-@router.get("/{slug}")
-async def get_movie_by_slug(uow: UOWDep, slug: str) -> MovieSchema:
-    movie = await MovieService().get_movie_by_slug(uow, slug)
-    return movie

@@ -12,6 +12,7 @@ class Tags(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(16))
+    movies: Mapped[List["Movies"]] = relationship(secondary="movies_tags", back_populates="tags")
 
     def to_read_model(self) -> TagsScheme:
         return TagsScheme(
