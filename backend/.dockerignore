@@ -1,0 +1,40 @@
+# Ignore environment files
+.env
+.env.*
+
+# Ignore git files
+.git
+.gitignore
+
+# Ignore cache files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Ignore IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# Ignore Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Ignore test files
+tests/
+test/
+pytest.ini
+.pytest_cache
+
+# Ignore documentation
+README.md
+TESTING.md
+
+# Ignore other config files
+nginx.conf
+run_tests.py
