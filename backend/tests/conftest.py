@@ -1,78 +1,60 @@
+import os
 import sys
-from pathlib import Path
 
-# Add project root to Python path
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
+sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('..'))
+
+from schemas.auth import Payload
 
 import pytest
-import pytest_asyncio
 import asyncio
-from httpx import AsyncClient
 from fastapi.testclient import TestClient
-from unittest.mock import Mock
-from src.main import app
-from src.deps.dependencies import UOWDep
-from src.unitofwork import IUnitOfWork
+from main import app
+from utils.jwt_token import create_tokens
 
-
-class MockUnitOfWork:
-    """Mock Unit of Work for testing"""
-    def __init__(self):
-        self.movies = Mock()
-        self.auth = Mock()
-        self.movie_api = Mock()  # Добавляем movie_api для anime тестов
-        self.committed = False
-        self.rolled_back = False
-
-    async def __aenter__(self):
-        return self
-
-    async def __aexit__(self, *args):
-        pass
-
-    async def commit(self):
-        self.committed = True
-
-    async def rollback(self):
-        self.rolled_back = True
-
-
-@pytest.fixture
-def mock_uow():
-    """Provides a mock Unit of Work"""
-    return MockUnitOfWork()
-
-
-@pytest.fixture
-def client(mock_uow):
-    """Provides a test client for the FastAPI app with UOW dependency override"""
-    def _get_mock_uow():
-        return mock_uow
-
-    app.dependency_overrides[UOWDep] = _get_mock_uow
-    client = TestClient(app)
-    yield client
-    app.dependency_overrides.clear()
-
-
-@pytest.fixture
-def override_uow_dependency(mock_uow):
-    """Provides access to the mocked UOW for assertions"""
-    return mock_uow
-
-
-@pytest_asyncio.fixture
-async def async_client():
-    """Provides an async test client for the FastAPI app"""
-    async with AsyncClient(base_url="http://test") as ac:
-        ac.app = app
-        yield ac
+# class MockMovieAPI:
+#     """Mock Movie API for testing"""
+#     def __init__(self):
+#         self.get_popular = AsyncMock()
+#         self.get_translations_by_id = AsyncMock()
+#         self.search = AsyncMock()
+#
+#     async def get_popular(self, count: int, filters: dict = None):
+#         return []
+#
+#     async def get_translations_by_id(self, anime_id: int):
+#         return []
+#
+#     async def search(self, query: str, limit: int = 10):
+#         return []
 
 
 @pytest.fixture(scope="session")
 def event_loop():
-    """Create an instance of the default event loop for the test session."""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
+    """
+    Create an instance of the default event loop for the test session.
+
+    scope="session" означает, что этот event loop создается один раз
+    для всей сессии тестирования и переиспользуется во всех тестах.
+    Это важно для async тестов, чтобы избежать конфликтов между
+    различными event loop'ами.
+    """
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     yield loop
     loop.close()
+
+@pytest.fixture(scope="session")
+def access_token():
+    tokens = create_tokens(Payload(sub=0, name="test"))
+    return tokens.access_token
+
+@pytest.fixture
+def client():
+    client = TestClient(app)
+    yield client
+
+# @pytest_asyncio.fixture
+# async def async_client():
+#     async with AsyncClient(base_url="http://testserver") as ac:
+#         yield ac
