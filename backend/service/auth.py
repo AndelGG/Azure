@@ -68,10 +68,12 @@ class AuthService:
 
     def validate_token(self, token: str):
         try:
-            verify_token(
+            user = verify_token(
                 token=token,
                 token_type=TokenType.ACCESS
             )
+
+            return user
 
         except (TokenTypeError, VerificationError) as e:
             self.log.error(f"Token type error: {e}, asserting ACCESS")

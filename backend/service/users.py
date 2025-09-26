@@ -1,6 +1,6 @@
 import logging
 
-from db.repositories.abstract_repo import AbstractRepository
+from db.repositories.users import AbstractUserRepository
 from exceptions.service_error import IncorrectPasswordError, NotFoundError, DatabaseError, AlreadyExistsError, \
     ValidationError
 from schemas.users import UserSchema, UserCreate
@@ -8,13 +8,13 @@ from utils.jwt_token import verify_password
 
 
 class UserService:
-    def __init__(self, repo: AbstractRepository, logger: logging.Logger):
+    def __init__(self, repo: AbstractUserRepository, logger: logging.Logger):
         self.db = repo
         self.log = logger
 
     async def validate_user(self, dto: UserCreate) -> UserSchema:
         try:
-            user = await self.get_user(dto.username)
+            user = await self.get_user(dto)
             if not user:
                 self.log.info(f"User {dto.username} does not exist")
                 raise NotFoundError("User not found")
@@ -30,22 +30,15 @@ class UserService:
             raise ValidationError(str(e))
 
     async def is_user_exist(self, username: str) -> bool:
-        try:
-            # filters = dict()
-            # if dto.username:
-            #     filters["username"] = dto.username
-            # elif dto.email:
-            #     filters["email"] = dto.email
-            # else:
-            #     raise ValidationError("Username or email must be provided")
-            return await self.db.is_user_exists(username=username)
-        except Exception as e:
+         try:
+            return await self.db.is_username_taken(username=username)
+         except Exception as e:
             self.log.error(f"Database error: {e}")
             raise DatabaseError(str(e))
 
-    async def get_user(self, username: str) -> UserSchema | None:
+    async def get_user(self, dto: UserCreate) -> UserSchema | None:
         try:
-            return await self.db.find_one(username=username)
+            return await self.db.find_by_username(dto.username)
         except Exception as e:
             self.log.error(f"Database error with getting user: {e}")
             raise DatabaseError(str(e))
@@ -66,4 +59,3 @@ class UserService:
             raise DatabaseError(str(e))
 
     # async def update_user(self, user: UserAccount): pass
-

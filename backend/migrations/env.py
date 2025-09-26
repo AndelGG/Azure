@@ -7,14 +7,16 @@ from sqlalchemy import pool
 
 from alembic import context
 
-# Add the parent directory to the Python path so we can import from src
-current_dir = Path(__file__).parent.parent.parent
+# Add the current directory to the Python path
+current_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(current_dir))
 
 from core.config import settings
 from db.db import Base
 
 # Import all models so they are registered with Base.metadata
+from models.users import User
+from models.user_movies import UserMovie
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

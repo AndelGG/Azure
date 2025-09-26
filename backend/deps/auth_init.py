@@ -34,7 +34,8 @@ def verify_user(cred: HTTPAuthorizationCredentials = Depends(bearer), auth: Auth
             )
 
         token = cred.credentials
-        auth.validate_token(token)
+        user = auth.validate_token(token)
+        return user
     except VerificationError as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
